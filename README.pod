@@ -1,0 +1,13 @@
+=pod
+
+=encoding utf8
+
+=head1 Description
+
+XQuery 3.0 Grammar
+
+=head1 References
+
+L<XQuery 3.0: An XML Query Language|http://www.w3.org/TR/xquery-30> W3C Recommendation 08 April 2014
+
+=cut
