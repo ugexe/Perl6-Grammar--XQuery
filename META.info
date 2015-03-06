@@ -4,7 +4,8 @@
     "description" : "XQuery 3.0 selector grammar",
     "depends"     : [ ],
     "provides"    : [
-        "Grammar::XQuery" : "lib/Grammar/XQuery.pm6"
+        "Grammar::XQuery"            : "lib/Grammar/XQuery.pm6",
+        "Grammar::XQuery::XML::Base" : "lib/Grammar/XQuery/XML/Base.pm6"
     ],
     "auth"        : "github:ugexe",
     "source-url"  : "git://github.com/ugexe/Perl6-Grammar--XQuery.git"
