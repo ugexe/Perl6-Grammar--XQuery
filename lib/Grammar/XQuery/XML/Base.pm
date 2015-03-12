@@ -7,17 +7,17 @@ role Grammar::XQuery::XML::Base {
         ]
     }
 
-    token PITarget            { <.Name  -[ [Xx] [Mm] [Ll] ] }
+    token PITarget            { <!before [[Xx][Mm][Ll]]> <.Name> }
     token PrefixedName        { <.Prefix> ':' <.LocalPart> }
     token UnprefixedName      { <.LocalPart> } 
     token LocalPart           { <.NCName> }
     token Prefix              { <.NCName> }
     token S                   { \x[20,9,D,A]+ }
-    token NCName              { <.Name -[<.Char>* ':' <.Char>*]> }
+    token NCName              { <!before [<.Char>* ':' <.Char>*]> <.Name> }
     token Name                { <.NameStartChar> [<.NameChar>]*  }
     token NameStartChar       { 
         | ':' 
-        | [a-zA-Z] 
+        | [a..z A..Z] 
         | '_' 
         | <[\x[C0]..\x[D6]]>
         | <[\x[D8]..\x[F6]]>
@@ -45,7 +45,7 @@ role Grammar::XQuery::XML::Base {
         | \x[9] 
         | \x[A] 
         | \x[D] 
-        | <[[\x[20]..\x[D7FF]]> 
+        | <[\x[20]..\x[D7FF]]> 
         | <[\x[E000]..\x[FFFD]> 
         | <[\x[10000]..\x[10FFFF]]>
     } 

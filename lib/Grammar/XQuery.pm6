@@ -111,7 +111,7 @@ grammar Grammar::XQuery does Grammar::XQuery::XML::Base {
     token ContextItemDecl           { 
         'declare' 'context' 'item' 
         [
-            'as' <.ItemType>]? 
+            ['as' <.ItemType>]? 
             [
             | [':=' <.VarValue>] 
             | ['external' [':=' <.VarDefaultValue>]?]
@@ -256,7 +256,7 @@ grammar Grammar::XQuery does Grammar::XQuery::XML::Base {
     token ValidationMode            { 'lax' | 'strict' }
     token ExtensionExpr             { <.Pragma>+ '{' <.Expr>? '}' }
     token Pragma                    { '[#' <.S>? <.EQName> [<.S> <.PragmaContents>]? '#]' }
-    token PragmaContents            { [<.Char>* - [<.Char>* '#]' <.Char>*]] }
+    token PragmaContents            { <!before [<.Char>* '#]' <.Char>*]> <.Char>* }
     token SimpleMapExpr             { <.PathExpr> ['!' <.PathExpr>]* }
     token PathExpr                  { 
         | ['/' <.RelativePathExpr>?]
@@ -327,8 +327,8 @@ grammar Grammar::XQuery does Grammar::XQuery::XML::Base {
                     
     token Argument                  { <.ExprSingle> | <.ArgumentPlaceholder> }
     token ArgumentPlaceholder       { '?' }
-    token Constructor               { <.DirectConstructor>    | <.ComputedConstructor> }
-    token DirectConstructor         { <.DirElemConstructor> } | <.DirCommentConstructor> | <.DirPIConstructor> }
+    token Constructor               { <.DirectConstructor>   | <.ComputedConstructor> }
+    token DirectConstructor         { <.DirElemConstructor>  | <.DirCommentConstructor> | <.DirPIConstructor> }
     token DirElemConstructor        { 
         '<' <.QName> <.DirAttributeList> 
         [
@@ -358,14 +358,14 @@ grammar Grammar::XQuery does Grammar::XQuery::XML::Base {
     token DirCommentConstructor     { '<!--' <.DirCommentContents> '-->' }
     token DirCommentContents        { 
         [
-        | [<.Char> - '-'] 
-        | ['-' [<.Char -[\-]>]
+        | <+Char -[\-]>
+        | ['-' <+Char -[\-]>]
         ]* 
     }
-    token DirPIConstructor          { '<?' <.PITarget> [S <.DirPIContents>]? '?>' }
-    token DirPIContents             { [<.Char>* - [<.Char>* '?>' <.Char>*]] }
-    token CDataSection              { '<![<.CDATA>[' <.CDataSectionContents> ']]>' }
-    token CDataSectionContents      { [<.Char>* - [<.Char>* ']]>' <.Char>*]] }
+    token DirPIConstructor          { '<?' <.PITarget> [<.S> <.DirPIContents>]? '?>' }
+    token DirPIContents             { <!before [<.Char>* '?>' <.Char>*]> <.Char>*    }
+    token CDataSection              { '<![<.CDATA>[' <.CDataSectionContents> ']]>'   }
+    token CDataSectionContents      { <!before [<.Char>* ']>' <.Char>*]> <.Char>*    }
     token ComputedConstructor       { 
         | <.CompDocConstructor> 
         | <.CompElemConstructor>
@@ -429,7 +429,7 @@ grammar Grammar::XQuery does Grammar::XQuery::XML::Base {
         | ['item' '(' ')'] 
         | <.FunctionTest> 
         | <.AtomicOrUnionType> 
-        | <.ParenthesizedItemType> }
+        | <.ParenthesizedItemType> 
     }
     token AtomicOrUnionType         { <.EQName> }
     token KindTest                  { 
@@ -465,17 +465,11 @@ grammar Grammar::XQuery does Grammar::XQuery::XML::Base {
         ')' 
     }
     token AttributeTest             { 'attribute' '(' [<.AttribNameOrWildcard> [',' <.TypeName>]?]? ')' }
-    token AttribNameOrWildcard      { 
-        | <.AttributeName> 
-        | '*' 
-    }
+    token AttribNameOrWildcard      { <.AttributeName> | '*' }
     token SchemaAttributeTest       { 'schema-attribute' '(' <.AttributeDeclaration> ')' }
     token AttributeDeclaration      { <.AttributeName> }
     token ElementTest               { 'element' '(' [<.ElementNameOrWildcard> [',' <.TypeName> '?'?]?]? ')' }
-    token ElementNameOrWildcard     { 
-        | <.ElementName> 
-        | '*' 
-    }
+    token ElementNameOrWildcard     { <.ElementName> | '*' }
     token SchemaElementTest         { 'schema-element' '(' <.ElementDeclaration> ')' }
     token ElementDeclaration        { <.ElementName> }
     token AttributeName             { <.EQName> }
@@ -493,7 +487,8 @@ grammar Grammar::XQuery does Grammar::XQuery::XML::Base {
     token TypedFunctionTest         { 
         'function' '(' 
         [<.SequenceType> [',' <.SequenceType>]*]? 
-        ')' 'as' <.SequenceType> }
+        ')' 'as' <.SequenceType> 
+    }
     token ParenthesizedItemType     { '(' <.ItemType> ')' }
     token URILiteral                { <.StringLiteral> }
     token EQName                    { 
