@@ -3,7 +3,7 @@ use Test;
 plan 1;
 
 subtest {
-    lives_ok { use Grammar::XQuery };
+    lives-ok { use Grammar::XQuery };
 }, "Sanity tests";
 
 done();
